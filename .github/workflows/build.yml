@@ -51,29 +51,18 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.3.3
         with:
-          path: ./target/release/screenshot
-          name: ${{ github.event.repository.name }}
+          path: ./target/release/${{ github.event.repository.name }}.exe
+          name: ${{ github.event.repository.name }}.exe
           if-no-files-found: ignore
           retention-days: 7
           compression-level: 6
           overwrite: true
 
-      - name: List files
-        shell: pwsh
-        run: |
-          Get-ChildItem -Path ./target/release
-
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}
-          path: ${{ github.event.repository.name }}
-
-      - name: Check Files
-        shell: pwsh
-        run: |
-          Compress-Archive -Path "${{ github.event.repository.name }}" -DestinationPath "${{ github.event.repository.name }}.zip" -Force
-          ls -Force
+          name: ${{ github.event.repository.name }}.exe
+          path: ${{ github.event.repository.name }}.exe
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
@@ -81,4 +70,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            ${{ github.event.repository.name }}.zip
+            ${{ github.event.repository.name }}.exe
